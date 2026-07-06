@@ -15,7 +15,7 @@ app.use(passport.initialize());
 
 app.use('/api/auth', require('./routes/authRoutes'));
 app.use('/api/books', require('./routes/bookRoutes'));
-// app.use('/api/groups', require('./routes/groupRoutes'));
+app.use('/api/groups', require('./routes/groupRoutes'));
 // app.use('/api/quiz', require('./routes/quizRoutes'));
 // app.use('/api/progress', require('./routes/progressRoutes'));
 
