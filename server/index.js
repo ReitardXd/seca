@@ -17,7 +17,7 @@ app.use('/api/auth', require('./routes/authRoutes'));
 app.use('/api/books', require('./routes/bookRoutes'));
 app.use('/api/groups', require('./routes/groupRoutes'));
 // app.use('/api/quiz', require('./routes/quizRoutes'));
-// app.use('/api/progress', require('./routes/progressRoutes'));
+app.use('/api/progress', require('./routes/progressRoutes'));
 
 app.get('/', (req, res) => {
   res.json({ message: 'Seca API is running' });
