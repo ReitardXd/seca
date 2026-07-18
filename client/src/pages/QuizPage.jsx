@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react'
+import { useState } from 'react'
 import { useParams, useNavigate } from 'react-router-dom'
 import axios from 'axios'
 
@@ -12,20 +12,20 @@ const QuizPage = () => {
   const [answers, setAnswers] = useState([])
   const [selected, setSelected] = useState(null)
   const [result, setResult] = useState(null)
-  const [loading, setLoading] = useState(true)
+  const [loading, setLoading] = useState(false)
   const [submitting, setSubmitting] = useState(false)
   const [error, setError] = useState('')
+  const [count, setCount] = useState(5)
+  const [started, setStarted] = useState(false)
 
-  useEffect(() => {
-    fetchQuiz()
-  }, [groupId])
-
-  const fetchQuiz = async () => {
+  const fetchQuiz = async (questionCount = count) => {
+    setLoading(true)
     try {
       const token = localStorage.getItem('token')
-      const { data } = await axios.get(`${API}/api/quiz/${groupId}`, {
-        headers: { Authorization: `Bearer ${token}` },
-      })
+      const { data } = await axios.get(
+        `${API}/api/quiz/${groupId}?count=${questionCount}`,
+        { headers: { Authorization: `Bearer ${token}` } }
+      )
       setQuiz(data)
     } catch (err) {
       setError('Failed to load quiz')
@@ -72,6 +72,41 @@ const QuizPage = () => {
     }
   }
 
+  if (!started) return (
+    <div className="min-h-screen bg-gray-950 text-white flex items-center justify-center">
+      <div className="bg-gray-900 rounded-xl p-8 max-w-sm w-full text-center">
+        <h1 className="text-2xl font-bold mb-2">Ready to Quiz?</h1>
+        <p className="text-gray-400 text-sm mb-6">How many questions do you want?</p>
+        <div className="flex justify-center gap-3 mb-8">
+          {[3, 5, 10, 15].map((n) => (
+            <button
+              key={n}
+              onClick={() => setCount(n)}
+              className={`px-4 py-2 rounded-lg text-sm font-medium transition ${count === n
+                  ? 'bg-indigo-600 text-white'
+                  : 'bg-gray-800 text-gray-400 hover:bg-gray-700'
+                }`}
+            >
+              {n}
+            </button>
+          ))}
+        </div>
+        <button
+          onClick={() => { setStarted(true); fetchQuiz(count) }}
+          className="w-full bg-indigo-600 hover:bg-indigo-700 px-4 py-3 rounded-xl text-sm font-medium transition"
+        >
+          Start Quiz
+        </button>
+        <button
+          onClick={() => navigate(`/group/${groupId}`)}
+          className="w-full mt-3 text-gray-500 hover:text-white text-sm transition"
+        >
+          Cancel
+        </button>
+      </div>
+    </div>
+  )
+
   if (loading) return (
     <div className="min-h-screen bg-gray-950 text-white flex items-center justify-center">
       <p>Generating quiz...</p>
@@ -104,8 +139,8 @@ const QuizPage = () => {
           {result.score === result.total
             ? '🎉 Perfect score!'
             : result.score >= result.total / 2
-            ? '👍 Good job!'
-            : '📖 Keep reading!'}
+              ? '👍 Good job!'
+              : '📖 Keep reading!'}
         </p>
       </div>
 
@@ -138,8 +173,7 @@ const QuizPage = () => {
             setAnswers([])
             setCurrent(0)
             setSelected(null)
-            setLoading(true)
-            fetchQuiz()
+            setStarted(false)
           }}
           className="flex-1 bg-indigo-600 hover:bg-indigo-700 px-4 py-3 rounded-xl text-sm transition"
         >
@@ -180,11 +214,10 @@ const QuizPage = () => {
           <button
             key={option}
             onClick={() => handleSelect(option)}
-            className={`w-full text-left px-5 py-4 rounded-xl text-sm transition border ${
-              selected === option
+            className={`w-full text-left px-5 py-4 rounded-xl text-sm transition border ${selected === option
                 ? 'bg-indigo-600 border-indigo-500 text-white'
                 : 'bg-gray-900 border-gray-700 hover:border-indigo-500 hover:bg-gray-800'
-            }`}
+              }`}
           >
             {option}
           </button>

@@ -261,14 +261,21 @@ const GroupPage = () => {
 
           {/* Quiz Button */}
           {group.book && (
-            <div className="mt-4">
-              <button
-                onClick={() => navigate(`/quiz/${id}`)}
-                className="w-full bg-purple-600 hover:bg-purple-700 px-4 py-3 rounded-xl text-sm font-medium transition"
-              >
-                🧠 Take a Quiz
-              </button>
-            </div>
+  <div className="mt-4 flex gap-3">
+    <button
+      onClick={() => navigate(`/quiz/${id}`)}
+      className="flex-1 bg-purple-600 hover:bg-purple-700 px-4 py-3 rounded-xl text-sm font-medium transition"
+    >
+      🧠 Take a Quiz
+    </button>
+    <button
+      onClick={() => navigate(`/leaderboard/${id}`)}
+      className="flex-1 bg-gray-800 hover:bg-gray-700 px-4 py-3 rounded-xl text-sm font-medium transition"
+    >
+      🏆 Leaderboard
+    </button>
+  </div>
+
           )}
         </div>
       </div>

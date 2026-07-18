@@ -4,7 +4,7 @@ const Group = require('../models/Group')
 
 const getQuiz = async (req, res) => {
   const { groupId } = req.params
-  const { topic } = req.query
+  const { topic, count } = req.query
 
   const group = await Group.findById(groupId).populate('book')
 
@@ -16,10 +16,13 @@ const getQuiz = async (req, res) => {
     return res.status(400).json({ message: 'No book set for this group' })
   }
 
+  const questionCount = Math.min(Math.max(parseInt(count) || 5, 3), 15)
+
   const questions = await generateQuiz(
     group.book.title,
     group.book.author || 'Unknown',
-    topic || ''
+    topic || '',
+    questionCount
   )
 
   res.json({ questions, book: group.book.title })
