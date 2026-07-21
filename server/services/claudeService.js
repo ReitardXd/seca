@@ -32,13 +32,18 @@ Format:
     model: 'llama-3.3-70b-versatile',
     messages: [{ role: 'user', content: prompt }],
     temperature: 1.0,
-    max_tokens: 300 * count,
+    max_tokens: 4096,
   })
 
   const raw = response.choices[0].message.content.trim()
   const cleaned = raw.replace(/```json|```/g, '').trim()
+ try {
   const questions = JSON.parse(cleaned)
   return questions
+} catch (e) {
+  console.error('Failed to parse quiz JSON:', cleaned)
+  throw new Error('Quiz generation failed — invalid JSON from model')
+} 
 }
 
 module.exports = { generateQuiz }

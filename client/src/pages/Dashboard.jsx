@@ -65,12 +65,17 @@ const Dashboard = () => {
           <h1 className="text-3xl font-bold">Hey, {user?.name?.split(' ')[0]} 👋</h1>
           <p className="text-gray-400 mt-1">Your reading groups</p>
         </div>
-        <button
-          onClick={logout}
-          className="text-sm text-gray-400 hover:text-white transition"
-        >
-          Logout
-        </button>
+        <div className="flex items-center gap-4">
+    <button
+      onClick={() => navigate('/profile')}
+      className="flex items-center gap-2 text-sm text-gray-400 hover:text-white transition"
+    >
+      {user?.avatar && (
+        <img src={user.avatar} alt={user.name} className="w-8 h-8 rounded-full" />
+      )}
+      Profile
+    </button>
+  </div>
       </div>
 
       {error && <p className="text-red-400 mb-4">{error}</p>}
