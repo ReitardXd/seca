@@ -14,11 +14,11 @@ Seca is a full-stack social reading platform where friend groups compete to fini
 
 | Login | Dashboard |
 |-------|-----------|
-| ![Login](Login.png) | ![Dashboard](dashboard.png) |
+| ![Login](pictures/Login.png) | ![Dashboard](pictures/dashboard.png) |
 
 | Quiz Setup | Quiz Question | Results |
 |------------|---------------|---------|
-| ![Quiz Setup](quizno.png) | ![Question](examplequestion.png) | ![Results](result.png) |
+| ![Quiz Setup](pictures/quizno.png) | ![Question](pictures/examplequestion.png) | ![Results](pictures/result.png) |
 
 ---
 
