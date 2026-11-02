@@ -28,7 +28,8 @@ const QuizPage = () => {
       )
       setQuiz(data)
     } catch (err) {
-      setError('Failed to load quiz')
+      console.error('Failed to load quiz:', err)
+      setError(err.response?.data?.message || 'Failed to load quiz')
     } finally {
       setLoading(false)
     }
@@ -66,7 +67,8 @@ const QuizPage = () => {
       )
       setResult(data)
     } catch (err) {
-      setError('Failed to submit quiz')
+      console.error('Failed to submit quiz:', err)
+      setError(err.response?.data?.message || 'Failed to submit quiz')
     } finally {
       setSubmitting(false)
     }

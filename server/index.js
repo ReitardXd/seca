@@ -4,6 +4,7 @@ const cors = require('cors');
 const passport = require('passport');
 dotenv.config();
 const connectDB = require('./config/db');
+const { notFound, errorHandler } = require('./middleware/errorMiddleware');
 require('./config/passport');
 connectDB();
 
@@ -22,6 +23,9 @@ app.use('/api/progress', require('./routes/progressRoutes'));
 app.get('/', (req, res) => {
   res.json({ message: 'Seca API is running' });
 });
+
+app.use(notFound);
+app.use(errorHandler);
 
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
