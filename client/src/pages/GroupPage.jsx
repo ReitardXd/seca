@@ -3,10 +3,12 @@ import { useParams, useNavigate } from 'react-router-dom'
 import { getGroup, setBook } from '../services/groupService'
 import { getGroupProgress, updateProgress } from '../services/progressService'
 import { searchBooks, cacheBook } from '../services/bookService'
+import { useAuth } from '../context/AuthContext'
 
 const GroupPage = () => {
   const { id } = useParams()
   const navigate = useNavigate()
+  const { user } = useAuth()
   const [group, setGroup] = useState(null)
   const [progress, setProgress] = useState([])
   const [loading, setLoading] = useState(true)
@@ -62,6 +64,7 @@ const GroupPage = () => {
       await setBook(id, cachedBook._id)
       setShowBookSearch(false)
       fetchGroup()
+      fetchProgress()
     } catch (err) {
       setError('Failed to set book')
     }
@@ -86,6 +89,8 @@ const GroupPage = () => {
     if (!group?.book?.pages) return 0
     return Math.min(Math.round((pagesRead / group.book.pages) * 100), 100)
   }
+
+  const isAdmin = group?.members?.some((m) => m.user._id === user?._id && m.role === 'admin')
 
   if (loading) return <div className="p-8 text-white">Loading...</div>
   if (!group) return <div className="p-8 text-white">Group not found</div>
@@ -151,6 +156,14 @@ const GroupPage = () => {
                       Save
                     </button>
                   </div>
+                )}
+                {isAdmin && (
+                  <button
+                    onClick={() => setShowBookSearch(!showBookSearch)}
+                    className="mt-3 w-full bg-gray-800 hover:bg-gray-700 px-4 py-2 rounded-lg text-sm transition"
+                  >
+                    Change Book
+                  </button>
                 )}
               </div>
             ) : (
@@ -247,7 +260,9 @@ const GroupPage = () => {
                         style={{ width: `${percent}%` }}
                       />
                     </div>
-                    <p className="text-xs text-gray-600 mt-1">{percent}% complete</p>
+                    <p className="text-xs text-gray-600 mt-1">
+                      {group.book?.pages ? `${percent}% complete` : 'Total pages unknown'}
+                    </p>
                   </div>
                 )
               })}
