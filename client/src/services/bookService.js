@@ -11,3 +11,8 @@ export const getBook = async (id) => {
   const { data } = await axios.get(`${API}/api/books/${id}`)
   return data
 }
+
+export const cacheBook = async (book) => {
+  const { data } = await axios.post(`${API}/api/books`, book)
+  return data
+}

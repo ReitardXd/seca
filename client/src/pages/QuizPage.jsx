@@ -59,9 +59,8 @@ const QuizPage = () => {
       const { data } = await axios.post(
         `${API}/api/quiz/submit`,
         {
-          groupId,
+          quizId: quiz.quizId,
           answers: finalAnswers,
-          questions: quiz.questions,
         },
         { headers: { Authorization: `Bearer ${token}` } }
       )

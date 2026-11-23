@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react'
 import { useParams, useNavigate } from 'react-router-dom'
 import { getGroup, setBook } from '../services/groupService'
 import { getGroupProgress, updateProgress } from '../services/progressService'
-import { searchBooks } from '../services/bookService'
+import { searchBooks, cacheBook } from '../services/bookService'
 
 const GroupPage = () => {
   const { id } = useParams()
@@ -58,12 +58,7 @@ const GroupPage = () => {
 
   const handleSetBook = async (book) => {
     try {
-      // First cache the book in DB
-      const response = await fetch(
-        `${import.meta.env.VITE_API_URL}/api/books/${book.openLibraryId.replace('/works/', '')}`,
-        { headers: { Authorization: `Bearer ${localStorage.getItem('token')}` } }
-      )
-      const cachedBook = await response.json()
+      const cachedBook = await cacheBook(book)
       await setBook(id, cachedBook._id)
       setShowBookSearch(false)
       fetchGroup()

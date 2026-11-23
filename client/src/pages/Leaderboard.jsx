@@ -63,11 +63,19 @@ const Leaderboard = () => {
         totalScore: 0,
         totalQuizzes: 0,
         bestScore: 0,
+        bestTotal: 0,
       }
     }
     acc[userId].totalScore += result.score
     acc[userId].totalQuizzes += 1
-    acc[userId].bestScore = Math.max(acc[userId].bestScore, result.score)
+    const ratio = result.total ? result.score / result.total : 0
+    const bestRatio = acc[userId].bestTotal
+      ? acc[userId].bestScore / acc[userId].bestTotal
+      : -1
+    if (ratio > bestRatio) {
+      acc[userId].bestScore = result.score
+      acc[userId].bestTotal = result.total
+    }
     return acc
   }, {})
 
@@ -127,7 +135,7 @@ const Leaderboard = () => {
               <div className="flex-1">
                 <p className="font-medium">{entry.user.name}</p>
                 <p className="text-gray-400 text-xs">
-                  {entry.totalQuizzes} quiz{entry.totalQuizzes !== 1 ? 'zes' : ''} taken · Best: {entry.bestScore}/5
+                  {entry.totalQuizzes} quiz{entry.totalQuizzes !== 1 ? 'zes' : ''} taken · Best: {entry.bestScore}/{entry.bestTotal}
                 </p>
               </div>
               <div className="text-right">

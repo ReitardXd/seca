@@ -28,4 +28,28 @@ const getBook = async (req, res) => {
   res.json(book);
 };
 
-module.exports = { search, getBook };
+const cacheBook = async (req, res) => {
+  const { openLibraryId, title, author, cover, year, pages } = req.body
+
+  if (!openLibraryId || !title) {
+    return res.status(400).json({ message: 'openLibraryId and title are required' })
+  }
+
+  let description
+  try {
+    const details = await getBookById(openLibraryId)
+    description = details.description
+  } catch (e) {
+    // description is optional
+  }
+
+  const book = await Book.findOneAndUpdate(
+    { openLibraryId },
+    { $set: { title, author, cover, year, pages, ...(description && { description }) } },
+    { upsert: true, new: true, setDefaultsOnInsert: true }
+  )
+
+  res.json(book)
+}
+
+module.exports = { search, getBook, cacheBook };
